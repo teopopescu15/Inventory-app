@@ -1,0 +1,51 @@
+# Spring Boot Backend
+spring-app/target/
+spring-app/.mvn/
+spring-app/mvnw
+spring-app/mvnw.cmd
+spring-app/HELP.md
+spring-app/.DS_Store
+spring-app/application.log
+
+# Frontend Node modules
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/.vite/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+frontend.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Playwright
+.playwright-mcp/
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# Database
+*.db
+*.sqlite
+
+# Secrets (if any)
+.env
+*.pem
+*.key

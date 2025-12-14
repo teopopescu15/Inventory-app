@@ -1,0 +1,8 @@
+cd frontend 
+npm run dev
+
+ cd spring-app
+  2. Make sure PostgreSQL is running and configured (you'll need to check/create the database configuration in
+  src/main/resources/application.properties)
+  3. Run the Spring Boot application using Maven:
+  ./mvnw spring-boot:run
