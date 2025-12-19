@@ -11,9 +11,14 @@ export default defineConfig({
     },
   },
   server: {
+    host: '0.0.0.0',
+    port: 4200,
+    watch: {
+      usePolling: true,  // Required for Docker volume mounts
+    },
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: process.env.VITE_PROXY_TARGET || 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
       }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { User as UserIcon, LogOut, Package, Sparkles } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { User as UserIcon, LogOut, Package, Sparkles, TrendingUp, Table } from 'lucide-react';
 
 interface SidebarProps {
   // Optional: for future extensibility
@@ -8,6 +8,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [userName, setUserName] = useState('User');
   const [userEmail, setUserEmail] = useState('user@example.com');
 
@@ -44,10 +45,36 @@ export const Sidebar: React.FC<SidebarProps> = () => {
         <nav className="flex-1 p-4 space-y-1">
           <button
             onClick={() => navigate('/inventory')}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 bg-gray-800 text-white font-medium cursor-pointer"
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium cursor-pointer ${
+              location.pathname === '/inventory'
+                ? 'bg-gray-800 text-white'
+                : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+            }`}
           >
             <Package className="w-5 h-5" />
             Inventory
+          </button>
+          <button
+            onClick={() => navigate('/table-view')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium cursor-pointer ${
+              location.pathname === '/table-view'
+                ? 'bg-gray-800 text-white'
+                : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+            }`}
+          >
+            <Table className="w-5 h-5" />
+            Table View
+          </button>
+          <button
+            onClick={() => navigate('/analysis')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium cursor-pointer ${
+              location.pathname === '/analysis'
+                ? 'bg-gray-800 text-white'
+                : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+            }`}
+          >
+            <TrendingUp className="w-5 h-5" />
+            AI Analysis
           </button>
         </nav>
 

@@ -1,10 +1,15 @@
 import axios from 'axios';
 import type { Category } from '../types/category';
 import type { Product } from '../types/product';
+import type {
+  ProductCountHistory,
+  InventoryAnalysis,
+  QuickStats,
+} from '../types/analysis';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: '/api',  // Uses Vite proxy in development
+  baseURL: import.meta.env.VITE_API_URL || '/api',  // Uses env var or Vite proxy in development
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -180,6 +185,36 @@ export const apiService = {
     // Signup (create user)
     signup: async (user: User): Promise<User> => {
       const response = await api.post('/users', user);
+      return response.data;
+    },
+  },
+
+  // Product count history methods
+  productHistory: {
+    // Get history for a specific product
+    getByProduct: async (productId: number): Promise<ProductCountHistory[]> => {
+      const response = await api.get(`/products/${productId}/history`);
+      return response.data;
+    },
+
+    // Get all history for the company (last 6 months)
+    getAll: async (): Promise<ProductCountHistory[]> => {
+      const response = await api.get('/products/history');
+      return response.data;
+    },
+  },
+
+  // Analysis methods
+  analysis: {
+    // Get full AI-powered analysis
+    getAnalysis: async (): Promise<InventoryAnalysis> => {
+      const response = await api.get('/analysis');
+      return response.data;
+    },
+
+    // Get quick stats without AI (faster)
+    getQuickStats: async (): Promise<QuickStats> => {
+      const response = await api.get('/analysis/quick-stats');
       return response.data;
     },
   },

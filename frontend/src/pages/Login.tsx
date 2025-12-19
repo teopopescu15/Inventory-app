@@ -47,7 +47,13 @@ const Login: React.FC = () => {
       navigate('/inventory');
     } catch (err: any) {
       console.error('Login failed:', err);
-      setError(err.response?.data || 'Invalid email or password. Please try again.');
+      const errorData = err.response?.data;
+      // Handle error object or string
+      if (typeof errorData === 'object' && errorData !== null) {
+        setError(errorData.message || errorData.error || 'Invalid email or password. Please try again.');
+      } else {
+        setError(errorData || 'Invalid email or password. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }

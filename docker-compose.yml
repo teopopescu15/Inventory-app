@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:16-alpine
+    container_name: inventory-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: inventory
+      POSTGRES_PASSWORD: inventory123
+    volumes:
+      - inventory-postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U inventory -d inventory"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./spring-app
+      dockerfile: Dockerfile
+    container_name: inventory-backend
+    restart: unless-stopped
+    ports:
+      - "4201:4201"
+    environment:
+      - DB_URL=jdbc:postgresql://database:5432/inventory
+      - DB_USERNAME=inventory
+      - DB_PASSWORD=inventory123
+      - JWT_SECRET=your-256-bit-secret-key-here-minimum-32-characters-for-inventory-app
+      - JWT_EXPIRATION=86400000
+      - SERVER_PORT=4201
+    volumes:
+      - ./spring-app/src:/app/src
+      - ./spring-app/pom.xml:/app/pom.xml
+    depends_on:
+      database:
+        condition: service_healthy
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: inventory-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    environment:
+      - VITE_API_URL=http://34.13.240.241:4201/api
+      - VITE_PROXY_TARGET=http://backend:4201
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
+    depends_on:
+      - backend
+
+volumes:
+  inventory-postgres-data:
+    driver: local

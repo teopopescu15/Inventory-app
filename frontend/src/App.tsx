@@ -2,12 +2,14 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import Inventory from './pages/Inventory';
+import Analysis from './pages/Analysis';
+import TableView from './pages/TableView';
 import ComponentTest from './pages/ComponentTest';
 import './App.css';
 
 function App() {
-  // You can add authentication logic here later
-  const isAuthenticated = true; // Temporarily set to true for testing
+  // Check for JWT token in localStorage
+  const isAuthenticated = !!localStorage.getItem('token');
 
   return (
     <Router>
@@ -20,6 +22,14 @@ function App() {
         <Route
           path="/inventory"
           element={isAuthenticated ? <Inventory /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/analysis"
+          element={isAuthenticated ? <Analysis /> : <Navigate to="/login" replace />}
+        />
+        <Route
+          path="/table-view"
+          element={isAuthenticated ? <TableView /> : <Navigate to="/login" replace />}
         />
 
         {/* Test route */}

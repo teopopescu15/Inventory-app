@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import net.javaguides.spring_app.entity.Product;
 import net.javaguides.spring_app.repository.CategoryRepository;
 import net.javaguides.spring_app.repository.ProductRepository;
+import net.javaguides.spring_app.service.ProductCountHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,9 @@ public class ProductController {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ProductCountHistoryService productCountHistoryService;
 
     /**
      * Get all products for a specific company
@@ -85,6 +89,8 @@ public class ProductController {
         return categoryRepository.findByIdAndCompanyId(product.getCategoryId(), companyId)
                 .<ResponseEntity<?>>map(category -> {
                     Product savedProduct = productRepository.save(product);
+                    // Record initial count in history
+                    productCountHistoryService.recordInitialCount(savedProduct.getId(), savedProduct.getCount());
                     return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
                 })
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -106,6 +112,9 @@ public class ProductController {
         Long companyId = (Long) request.getAttribute("userId");
         return productRepository.findByIdAndCategoryCompanyId(id, companyId)
                 .<ResponseEntity<?>>map(product -> {
+                    // Capture old count before update
+                    Integer oldCount = product.getCount();
+
                     // Validate new category if changed
                     if (!product.getCategoryId().equals(productDetails.getCategoryId())) {
                         return categoryRepository.findByIdAndCompanyId(productDetails.getCategoryId(), companyId)
@@ -116,6 +125,11 @@ public class ProductController {
                                     product.setPrice(productDetails.getPrice());
                                     product.setCount(productDetails.getCount());
                                     Product updatedProduct = productRepository.save(product);
+                                    // Record count change if count changed
+                                    if (!oldCount.equals(productDetails.getCount())) {
+                                        productCountHistoryService.recordCountChange(
+                                            updatedProduct.getId(), oldCount, productDetails.getCount(), null);
+                                    }
                                     return ResponseEntity.ok(updatedProduct);
                                 })
                                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -126,6 +140,11 @@ public class ProductController {
                         product.setPrice(productDetails.getPrice());
                         product.setCount(productDetails.getCount());
                         Product updatedProduct = productRepository.save(product);
+                        // Record count change if count changed
+                        if (!oldCount.equals(productDetails.getCount())) {
+                            productCountHistoryService.recordCountChange(
+                                updatedProduct.getId(), oldCount, productDetails.getCount(), null);
+                        }
                         return ResponseEntity.ok(updatedProduct);
                     }
                 })
