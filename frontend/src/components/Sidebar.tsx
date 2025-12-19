@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { User as UserIcon, LogOut, Package, Sparkles, TrendingUp, Table } from 'lucide-react';
+import { User as UserIcon, LogOut, Package, Sparkles, TrendingUp, Table, FileText } from 'lucide-react';
 
 interface SidebarProps {
   // Optional: for future extensibility
@@ -75,6 +75,17 @@ export const Sidebar: React.FC<SidebarProps> = () => {
           >
             <TrendingUp className="w-5 h-5" />
             AI Analysis
+          </button>
+          <button
+            onClick={() => navigate('/orders')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 font-medium cursor-pointer ${
+              location.pathname.startsWith('/orders')
+                ? 'bg-gray-800 text-white'
+                : 'text-gray-400 hover:bg-gray-800/50 hover:text-white'
+            }`}
+          >
+            <FileText className="w-5 h-5" />
+            Orders
           </button>
         </nav>
 

@@ -6,6 +6,7 @@ import type {
   InventoryAnalysis,
   QuickStats,
 } from '../types/analysis';
+import type { Order, CreateOrderDTO } from '../types/order';
 
 // Create axios instance with base configuration
 const api = axios.create({
@@ -215,6 +216,64 @@ export const apiService = {
     // Get quick stats without AI (faster)
     getQuickStats: async (): Promise<QuickStats> => {
       const response = await api.get('/analysis/quick-stats');
+      return response.data;
+    },
+  },
+
+  // Order methods
+  orders: {
+    // Get all orders for company (optional status filter)
+    getAll: async (status?: string): Promise<Order[]> => {
+      const params = status ? { status } : {};
+      const response = await api.get('/orders', { params });
+      return response.data;
+    },
+
+    // Get single order by ID
+    getById: async (id: number): Promise<Order> => {
+      const response = await api.get(`/orders/${id}`);
+      return response.data;
+    },
+
+    // Create new order (PENDING status)
+    create: async (data: CreateOrderDTO): Promise<Order> => {
+      const response = await api.post('/orders', data);
+      return response.data;
+    },
+
+    // Update existing PENDING order
+    update: async (id: number, data: CreateOrderDTO): Promise<Order> => {
+      const response = await api.put(`/orders/${id}`, data);
+      return response.data;
+    },
+
+    // Delete PENDING order
+    delete: async (id: number): Promise<void> => {
+      await api.delete(`/orders/${id}`);
+    },
+
+    // Finalize order (deduct inventory, generate invoice)
+    finalize: async (id: number): Promise<Order> => {
+      const response = await api.post(`/orders/${id}/finalize`);
+      return response.data;
+    },
+
+    // Download invoice PDF
+    downloadInvoice: async (id: number): Promise<Blob> => {
+      const response = await api.get(`/orders/${id}/invoice`, {
+        responseType: 'blob',
+      });
+      return response.data;
+    },
+
+    // Get order statistics
+    getStats: async (): Promise<{
+      total: number;
+      pending: number;
+      finalized: number;
+      totalRevenue: number;
+    }> => {
+      const response = await api.get('/orders/stats');
       return response.data;
     },
   },

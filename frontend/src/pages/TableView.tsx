@@ -23,6 +23,7 @@ import {
   ArrowDown,
   Minus,
   Plus,
+  ShoppingCart,
 } from 'lucide-react';
 import type { Product } from '@/types/product';
 import type { Category } from '@/types/category';
@@ -54,6 +55,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Sidebar } from '@/components/Sidebar';
+import { useCart } from '@/contexts/CartContext';
+import CartDrawer from '@/components/cart/CartDrawer';
 
 // Extended Product type with category name
 interface ProductWithCategory extends Product {
@@ -203,6 +206,9 @@ const TableView: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [addedProducts, setAddedProducts] = useState<Set<number>>(new Set());
+  const { addItem, totalItems } = useCart();
 
   // Table state
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -366,8 +372,61 @@ const TableView: React.FC = () => {
         ),
         size: 320, // Make column wider to fit controls
       },
+      {
+        id: 'addToCart',
+        header: 'Add to Cart',
+        cell: ({ row }) => {
+          const [quantity, setQuantity] = useState(1);
+          const product = row.original;
+          const isAdded = addedProducts.has(product.id!);
+
+          const handleAddToCart = () => {
+            const productData: Product = {
+              id: product.id,
+              categoryId: product.categoryId,
+              title: product.title,
+              image: product.image,
+              price: product.price,
+              count: product.count,
+            };
+            addItem(productData, quantity);
+            setAddedProducts((prev) => new Set(prev).add(product.id!));
+            setTimeout(() => {
+              setAddedProducts((prev) => {
+                const next = new Set(prev);
+                next.delete(product.id!);
+                return next;
+              });
+            }, 2000);
+          };
+
+          return (
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min="1"
+                max={product.count}
+                value={quantity}
+                onChange={(e) => setQuantity(Math.max(1, Math.min(product.count, parseInt(e.target.value) || 1)))}
+                className="w-16 bg-gray-800 border-gray-700 text-white text-center"
+                disabled={product.count === 0}
+              />
+              <Button
+                onClick={handleAddToCart}
+                disabled={product.count === 0 || isAdded}
+                size="sm"
+                className={isAdded ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'}
+              >
+                {isAdded ? 'Added!' : <><ShoppingCart className="h-4 w-4 mr-1" />Add</>}
+              </Button>
+            </div>
+          );
+        },
+        enableSorting: false,
+        size: 200,
+      },
     ],
-    [countSortMode]
+    [countSortMode, addedProducts, addItem]
   );
 
   // Apply category filter
@@ -416,9 +475,23 @@ const TableView: React.FC = () => {
           <div className="max-w-[1600px] mx-auto">
             {/* Header */}
             <div className="mb-8">
-              <div className="flex items-center gap-3 mb-2">
-                <TableIcon className="w-8 h-8 text-secondary-400" />
-                <h1 className="text-4xl font-bold text-white">Table View</h1>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <TableIcon className="w-8 h-8 text-secondary-400" />
+                  <h1 className="text-4xl font-bold text-white">Table View</h1>
+                </div>
+                <button
+                  onClick={() => setCartDrawerOpen(true)}
+                  className="relative bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 flex items-center gap-2 transition-colors"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  <span>Cart</span>
+                  {totalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                      {totalItems}
+                    </span>
+                  )}
+                </button>
               </div>
               <p className="text-gray-400">
                 View and manage your inventory in a comprehensive table
@@ -614,6 +687,7 @@ const TableView: React.FC = () => {
           </div>
         </div>
       </div>
+      <CartDrawer isOpen={cartDrawerOpen} onClose={() => setCartDrawerOpen(false)} />
     </div>
   );
 };
