@@ -102,7 +102,7 @@ const Orders: React.FC = () => {
               key={status}
               onClick={() => setFilter(status as any)}
               variant={filter === status ? 'default' : 'outline'}
-              className={filter === status ? 'bg-blue-600' : 'border-gray-700'}
+              className={filter === status ? 'bg-blue-600' : 'border-gray-700 text-white hover:bg-gray-800'}
             >
               {status}
             </Button>

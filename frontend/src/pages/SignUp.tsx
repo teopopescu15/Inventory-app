@@ -82,10 +82,10 @@ const SignUp: React.FC = () => {
   };
 
   const getPasswordStrengthTextColor = () => {
-    if (passwordStrength <= 2) return 'text-error-300';
-    if (passwordStrength === 3) return 'text-accent-300';
-    if (passwordStrength === 4) return 'text-secondary-300';
-    return 'text-success-300';
+    if (passwordStrength <= 2) return 'text-error-600';
+    if (passwordStrength === 3) return 'text-accent-600';
+    if (passwordStrength === 4) return 'text-secondary-600';
+    return 'text-success-600';
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -147,12 +147,15 @@ const SignUp: React.FC = () => {
         
         {/* Left Side - Hero / Branding (50% width on desktop) */}
         <div className="hidden lg:flex lg:w-1/2 relative bg-gray-900 border-r border-white/10 items-center justify-center p-12 overflow-hidden">
-          {/* Background pattern matching original styling */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-             <div className="absolute inset-0 opacity-10" style={{
-              backgroundImage: `radial-gradient(circle at 2px 2px, rgb(148, 163, 184) 1px, transparent 0)`,
-              backgroundSize: '40px 40px'
-            }} />
+          {/* Background image */}
+          <div className="absolute inset-0">
+            <img
+              src="/images/left-side-login-register-page.jpeg"
+              alt=""
+              className="w-full h-full object-cover"
+            />
+            {/* Dark overlay to ensure text readability */}
+            <div className="absolute inset-0 bg-gray-900/40" />
           </div>
 
           {/* Large Hero Content */}
@@ -164,9 +167,9 @@ const SignUp: React.FC = () => {
               <span className="text-3xl font-bold text-white">InventoryPro</span>
             </div>
 
-            <h1 className="text-5xl xl:text-7xl font-bold text-white leading-tight tracking-tight">
+            <h1 className="text-5xl xl:text-7xl font-bold text-white leading-tight tracking-tight" style={{textShadow: '0 0 20px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.5)'}}>
               Start Your <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary-400 to-secondary-200">
+              <span className="text-cyan-400" style={{textShadow: '0 0 20px rgba(56,189,248,0.8), 0 0 40px rgba(56,189,248,0.5), 0 0 60px rgba(56,189,248,0.3)'}}>
                 Journey
               </span>
             </h1>
@@ -196,27 +199,42 @@ const SignUp: React.FC = () => {
         </div>
 
         {/* Right Side - Form Container (50% width on desktop, 100% on mobile) */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 md:p-12 relative bg-gray-950/50 backdrop-blur-sm overflow-y-auto">
+        <div className="w-full lg:w-1/2 flex items-center justify-end p-4 sm:p-8 md:p-12 lg:pr-8 relative overflow-y-auto">
+          {/* Background image - fully visible */}
+          <div className="absolute inset-0">
+            <img
+              src="/images/right-side-login-register-page.jpeg"
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          </div>
+
            {/* Mobile header */}
-           <div className="absolute top-6 left-6 flex lg:hidden items-center gap-2">
+           <div className="absolute top-6 left-6 flex lg:hidden items-center gap-2 z-10">
               <div className="w-8 h-8 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-lg flex items-center justify-center">
                 <Package className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold text-white">InventoryPro</span>
+              <span className="text-lg font-bold text-gray-800">InventoryPro</span>
            </div>
 
-           <div className="w-full max-w-md space-y-8 my-auto">
-              <div className="text-center lg:text-left space-y-2 pt-8 lg:pt-0">
-                <h2 className="text-3xl font-bold text-white">Create Account</h2>
-                <p className="text-gray-400">Fill in your details to get started</p>
+           <style>{`
+              @keyframes borderGlow {
+                0%, 100% { box-shadow: 0 0 5px #7dd3fc, 0 0 10px #7dd3fc, 0 0 20px #38bdf8, 0 0 30px #38bdf8; }
+                50% { box-shadow: 0 0 10px #7dd3fc, 0 0 20px #7dd3fc, 0 0 40px #38bdf8, 0 0 60px #38bdf8; }
+              }
+            `}</style>
+            <div className="w-full max-w-md my-auto relative z-10 bg-white/5 rounded-2xl p-8 space-y-6 border-2 border-sky-400" style={{animation: 'borderGlow 2s ease-in-out infinite'}}>
+              <div className="text-center lg:text-left space-y-2">
+                <h2 className="text-3xl font-bold text-gray-900" style={{textShadow: '0 0 10px rgba(255,255,255,1), 0 0 20px rgba(255,255,255,0.8), 0 0 30px rgba(255,255,255,0.6)'}}>Create Account</h2>
+                <p className="text-gray-800 font-semibold" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>Fill in your details to get started</p>
               </div>
 
               {/* FORM */}
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Company Name field */}
                 <div className="space-y-2">
-                  <Label htmlFor="companyName" className="text-sm font-semibold flex items-center gap-2 text-gray-200">
-                    <User className="w-4 h-4 text-secondary-400" />
+                  <Label htmlFor="companyName" className="text-sm font-bold flex items-center gap-2 text-gray-900" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
+                    <User className="w-4 h-4 text-secondary-700" style={{filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.9))'}} />
                     Company Name
                   </Label>
                   <Input
@@ -226,15 +244,15 @@ const SignUp: React.FC = () => {
                     value={formData.companyName}
                     onChange={handleInputChange}
                     required
-                    className="h-12 text-base bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-secondary-400 focus:ring-secondary-400/30 transition-all rounded-xl"
+                    className="h-12 text-base bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-secondary-500 focus:ring-secondary-500/30 transition-all rounded-xl"
                     placeholder="Acme Corporation"
                   />
                 </div>
 
                 {/* Company Email field */}
                 <div className="space-y-2">
-                  <Label htmlFor="companyEmail" className="text-sm font-semibold flex items-center gap-2 text-gray-200">
-                    <Mail className="w-4 h-4 text-secondary-400" />
+                  <Label htmlFor="companyEmail" className="text-sm font-bold flex items-center gap-2 text-gray-900" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
+                    <Mail className="w-4 h-4 text-secondary-700" style={{filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.9))'}} />
                     Company Email
                   </Label>
                   <Input
@@ -244,15 +262,15 @@ const SignUp: React.FC = () => {
                     value={formData.companyEmail}
                     onChange={handleInputChange}
                     required
-                    className="h-12 text-base bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-secondary-400 focus:ring-secondary-400/30 transition-all rounded-xl"
+                    className="h-12 text-base bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-secondary-500 focus:ring-secondary-500/30 transition-all rounded-xl"
                     placeholder="you@company.com"
                   />
                 </div>
 
                 {/* Password field */}
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-semibold flex items-center gap-2 text-gray-200">
-                    <Lock className="w-4 h-4 text-secondary-400" />
+                  <Label htmlFor="password" className="text-sm font-bold flex items-center gap-2 text-gray-900" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
+                    <Lock className="w-4 h-4 text-secondary-700" style={{filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.9))'}} />
                     Password
                   </Label>
                   <div className="relative">
@@ -263,13 +281,13 @@ const SignUp: React.FC = () => {
                       value={formData.password}
                       onChange={handleInputChange}
                       required
-                      className="h-12 text-base pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-secondary-400 focus:ring-secondary-400/30 transition-all rounded-xl"
+                      className="h-12 text-base pr-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-secondary-500 focus:ring-secondary-500/30 transition-all rounded-xl"
                       placeholder="Create a strong password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-secondary-400 focus-visible:outline-offset-2 rounded"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors focus-visible:outline-2 focus-visible:outline-secondary-500 focus-visible:outline-offset-2 rounded"
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -286,7 +304,7 @@ const SignUp: React.FC = () => {
                             className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
                               level <= passwordStrength
                                 ? getPasswordStrengthColor()
-                                : 'bg-white/10'
+                                : 'bg-gray-200'
                             }`}
                           />
                         ))}
@@ -296,7 +314,7 @@ const SignUp: React.FC = () => {
                           {getPasswordStrengthText()}
                         </span>
                         {passwordErrors.length > 0 && (
-                          <span className="text-xs text-gray-400">
+                          <span className="text-xs text-gray-500">
                             Missing: {passwordErrors.join(', ')}
                           </span>
                         )}
@@ -307,8 +325,8 @@ const SignUp: React.FC = () => {
 
                 {/* Confirm Password field */}
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-sm font-semibold flex items-center gap-2 text-gray-200">
-                    <Lock className="w-4 h-4 text-secondary-400" />
+                  <Label htmlFor="confirmPassword" className="text-sm font-bold flex items-center gap-2 text-gray-900" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
+                    <Lock className="w-4 h-4 text-secondary-700" style={{filter: 'drop-shadow(0 0 4px rgba(255,255,255,0.9))'}} />
                     Confirm Password
                   </Label>
                   <div className="relative">
@@ -319,13 +337,13 @@ const SignUp: React.FC = () => {
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
                       required
-                      className="h-12 text-base pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-secondary-400 focus:ring-secondary-400/30 transition-all rounded-xl"
+                      className="h-12 text-base pr-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-secondary-500 focus:ring-secondary-500/30 transition-all rounded-xl"
                       placeholder="Confirm your password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-secondary-400 focus-visible:outline-offset-2 rounded"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors focus-visible:outline-2 focus-visible:outline-secondary-500 focus-visible:outline-offset-2 rounded"
                       aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
                     >
                       {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -339,15 +357,15 @@ const SignUp: React.FC = () => {
                     id="terms"
                     checked={agreedToTerms}
                     onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)}
-                    className="mt-1 data-[state=checked]:bg-secondary-500 data-[state=checked]:border-secondary-500 border-white/30 rounded"
+                    className="mt-1 data-[state=checked]:bg-secondary-500 data-[state=checked]:border-secondary-500 border-gray-400 rounded"
                   />
-                  <Label htmlFor="terms" className="text-sm text-gray-300 cursor-pointer select-none font-normal leading-relaxed">
+                  <Label htmlFor="terms" className="text-sm text-gray-900 cursor-pointer select-none font-semibold leading-relaxed" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
                     I agree to the{' '}
-                    <Link to="#" className="text-white hover:text-secondary-400 transition-colors font-medium hover:underline">
+                    <Link to="#" className="text-gray-900 hover:text-secondary-700 transition-colors font-bold hover:underline" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
                       Terms and Conditions
                     </Link>{' '}
                     and{' '}
-                    <Link to="#" className="text-white hover:text-secondary-400 transition-colors font-medium hover:underline">
+                    <Link to="#" className="text-gray-900 hover:text-secondary-700 transition-colors font-bold hover:underline" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
                       Privacy Policy
                     </Link>
                   </Label>
@@ -355,8 +373,8 @@ const SignUp: React.FC = () => {
 
                 {/* Error message */}
                 {error && (
-                  <Alert variant="destructive" className="animate-fade-in bg-error-500/20 border-error-400 backdrop-blur-sm">
-                    <AlertDescription className="text-error-100">{error}</AlertDescription>
+                  <Alert variant="destructive" className="animate-fade-in bg-error-500/10 border-error-500">
+                    <AlertDescription className="text-error-600">{error}</AlertDescription>
                   </Alert>
                 )}
 
@@ -364,7 +382,8 @@ const SignUp: React.FC = () => {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full h-12 bg-gradient-to-r from-secondary-500 to-primary-600 hover:from-secondary-600 hover:to-primary-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-primary-500/20 transition-all duration-300 transform hover:scale-[1.02] mt-4"
+                  className="w-full h-12 bg-sky-500 hover:bg-sky-600 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-300 transform hover:scale-[1.02] mt-4"
+                  style={{boxShadow: '0 0 15px rgba(56,189,248,0.5), 0 0 30px rgba(56,189,248,0.3)'}}
                 >
                   {isLoading ? (
                     <>
@@ -381,11 +400,12 @@ const SignUp: React.FC = () => {
               </form>
 
               {/* Sign in link */}
-              <p className="text-center text-gray-400 mt-8">
+              <p className="text-center text-gray-900 font-semibold mt-6" style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}>
                 Already have an account?{' '}
                 <Link
                   to="/login"
-                  className="text-white hover:text-secondary-400 font-semibold transition-colors hover:underline"
+                  className="text-gray-900 hover:text-secondary-700 font-bold transition-colors hover:underline"
+                  style={{textShadow: '0 0 8px rgba(255,255,255,1), 0 0 16px rgba(255,255,255,0.8)'}}
                 >
                   Sign in
                 </Link>
